@@ -119,7 +119,7 @@ mean(subInfo.mixedGam(subInfo.subIds(adjustIds))); %65.9624
 
 % Index these first trial variations:
 
-gainGamWin1= find(firstPlayTable.trial == 1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
+gainGamWin= find(firstPlayTable.trial == 1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
 % 5977 first trials where trial was gain type and participant gambled and
 % won
 % mean outcome ammount for this type of trials = 103
