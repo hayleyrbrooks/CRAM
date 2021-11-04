@@ -6,12 +6,14 @@
 % reset 
 clear all;
 
+% get in the right directory
 cd /Users/shlab/Desktop/GBEdata/Rutledge_risk_and_happiness_task_2020
+
 %load the data
 load ('Rutledge_GBE_risk_data.mat');
 % this loads depData (depression data) and subjData (choicesets, age, gender, etc)
-load('firstPlayTable.mat');
 
+load('firstPlayTable.mat');
 % this was generated below but now commented out
 % its basically the long format of the data above
 % saving the code in the event we want to change it
