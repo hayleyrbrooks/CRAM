@@ -100,12 +100,6 @@ mean(subInfo.mixedGam(subInfo.subIds(adjustIds))); %65.9624
 % generally lower risk-taking when removing people at the bounds
 
 
-% looking at relationship between gambling and life satisfaction
-% these are basic correlations - will want to check regressions and look at
-% effect sizes
-% is life satisfaction related to pgamble
-[r, pval] = corr(subInfo.lifeSat, subInfo.totalGam)
-
 
 %% saving stuff
 %writetable( firstPlayTable, 'firstPlayTable.csv');
@@ -219,3 +213,13 @@ mean(firstPlayTable.choice(mixedSafe+1)); %0.6368
 % next:
 % compare these means - best way to do so...ranksum or ranksign?
 
+
+
+
+
+% additional analyses to do:
+% looking at relationship between gambling and life satisfaction
+% these are basic correlations - will want to check regressions and look at
+% effect sizes
+% for example: is life satisfaction related to pgamble?
+[r, pval] = corr(subInfo.lifeSat, subInfo.totalGam)
