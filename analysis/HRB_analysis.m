@@ -118,7 +118,7 @@ mean(subInfo.mixedGam(subInfo.subIds(adjustIds))); %65.9624
 gainGamWin= find(firstPlayTable.trial == 1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
 % 5977 first trials where trial was gain type and participant gambled and
 % won
-% mean outcome ammount for this type of trials = 103
+% mean outcome amount for this type of trials = 103
 
 % pgamble on next trial:
 mean(firstPlayTable.choice(gainGamWin+1)); %  0.6737
@@ -201,7 +201,7 @@ mean(firstPlayTable.choice(mixedSafe+1)); %0.6368
 % but there is a very small difference between risk-taking after a 0 on a 
 % loss and gain trial. 
 
-% following gain trials, risk-takins was highest when the outcome was a loss, then a win,
+% following gain trials, risk-taking was highest when the outcome was a loss, then a win,
 % then a safe
 
 % following loss trials, risk-taking was highest when the outcome was a
@@ -212,8 +212,7 @@ mean(firstPlayTable.choice(mixedSafe+1)); %0.6368
 % trial is very small.
 
 
-% next:
-% compare these means - best way to do so...ranksum or ranksign?
+% Check the same pattern, but look at the 2nd and 3rd trials
 
 
 
