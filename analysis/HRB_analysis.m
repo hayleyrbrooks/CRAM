@@ -103,7 +103,7 @@ mean(subInfo.mixedGam(subInfo.subIds(adjustIds))); %65.9624
 
 
 
-%% saving stuff
+%% saving stuff - don't need to do this everytime unless we change the tables
 %writetable( firstPlayTable, 'firstPlayTable.csv');
 %writetable(subInfo, 'subInfo.csv');
 
@@ -250,7 +250,7 @@ plot(pgams{:,8},'color', 'blue', 'marker', "o", 'markersize',9, "linewidth", 2);
 
 %% The analysis above looks at risk-taking on the current trial as a
 % function of the previous trial type, choice and outcome. What does
-% it look like as both a function of prevoius trial events and current
+% it look like as both a function of previous trial events and current
 % trial type. For now, don't worry about safe trials. Just looking at
 % trials 1 and 2 right now.
 
@@ -427,3 +427,81 @@ mean(firstPlayTable.choice(mixedGamLossNextMix));  %0.5927
     % mixed gamble loss = 0.5927
 
 % TO DO: PLOT this stuff!
+
+
+
+%% 
+nT = 30; % 30 trials
+pgamPrevTrials = array2table(NaN(30,22));
+pgamPrevTrials.Properties.VariableNames ={'allCurrTypes' 
+                                           'allCurrGain' 
+                                           'allCurrLoss' 
+                                           'allCurrMix' 
+                                           
+                                           'currGainPrevGainWin'
+                                           'currGainPrevGainLose'
+                                           'currGainPrevLossWin'
+                                           'currGainPrevLossLose'
+                                           'currGainPrevMixWin'
+                                           'currGainPrevMixLose'
+                                           
+                                           'currLossPrevGainWin'
+                                           'currLossPrevGainLose'
+                                           'currLossPrevLossWin'
+                                           'currLossPrevLossLose'
+                                           'currLossPrevMixWin'
+                                           'currLossPrevMixLose'
+                                           
+                                           'currMixPrevGainWin'
+                                           'currMixPrevGainLose'
+                                           'currMixPrevLossWin'
+                                           'currMixPrevLossLose'
+                                           'currMixPrevMixWin'
+                                           'currMixPrevMixLose'
+                                           
+                                           };
+
+for t=2:nT % 2-30 bc there is no prev trial before 1
+    currTrialInd = find(firstPlayTable.trial==t); % index of current trial
+    prevTrialInd = find(firstPlayTable.trial==t-1); % index of previous trial
+     
+%     if size(currTrialInd) ~= size(prevTrialInd)
+%         fprintf('current trial vector != previous trial vector for trial number %i\n',t)
+%     end %double checking that vectors for current and previous trials are same size
+%     
+    
+  
+     prevGainWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
+     prevGainLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
+     prevLossWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
+     prevLossLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
+     prevMixWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
+     prevMixLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
+    % note that gambling on the above trials == 1, that is the subsetting
+    % criteria since we are not looking at safe trials right now.
+     
+    currGainInd = find(firstPlayTable.trial==t & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0); % index current gain trials
+    currLossInd = find(firstPlayTable.trial==t & firstPlayTable.safe <0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0); % index current loss trials
+    currMixInd = find(firstPlayTable.trial==t & firstPlayTable.safe ==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0);  % index current mix trials
+    
+    pgamPrevTrials.allCurrTypes(t) = mean(firstPlayTable.choice(currTrialInd)); % pgamble across all current trials
+    pgamPrevTrials.allCurrGain(t) = mean(firstPlayTable.choice(currGainInd));   % pgamble across all current gain trials
+    pgamPrevTrials.allCurrLoss(t) = mean(firstPlayTable.choice(currLossInd));   % pgamble across all current loss trials
+    pgamPrevTrials.allCurrMix(t) = mean(firstPlayTable.choice(currMixInd));     % pgamble across all current mix trials
+    
+    
+ % what does pgamble look like on each trial as a function of both curren
+ % trial type and previous trial type/outcome
+
+ % LEFT OFF HERE - TRYING TO FIGURE OUT HOW TO GET PGAM ON CURRENT TRIAL AS
+ % A FUNCTION OF PREVIOUS TRIAL STUFF.
+    
+    
+
+    
+end
+
+
+
+plot(pgamPrevTrials.allCurrTypes); % gambling generally goes down over time.
+
