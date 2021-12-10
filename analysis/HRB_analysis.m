@@ -248,189 +248,17 @@ plot(pgams{:,8},'color', 'blue', 'marker', "o", 'markersize',9, "linewidth", 2);
 
 
 
-%% The analysis above looks at risk-taking on the current trial as a
-% function of the previous trial type, choice and outcome. What does
-% it look like as both a function of previous trial events and current
-% trial type. For now, don't worry about safe trials. Just looking at
-% trials 1 and 2 right now.
-
-% T-1 = GAIN, GAMBLE, WIN:
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: gainGamWin1
-% index  for all t: gainGamWin1+1
-
-gainGamWinNext = firstPlayTable(gainGamWin1 + 1,:); % all trials following a gain trial, gamble win
-
-% When previous trial was gain trial type and participants gambled and
-% won the following trials were...
-gainGamWinNextGain = find(gainGamWinNext.trial == 2 & gainGamWinNext.safe >0 & gainGamWinNext.riskyGain>0 & gainGamWinNext.riskyLoss==0); % gain trials (2017)
-gainGamWinNextLoss = find(gainGamWinNext.trial == 2 & gainGamWinNext.safe <0 & gainGamWinNext.riskyGain==0 & gainGamWinNext.riskyLoss<0); % loss trials (2305)
-gainGamWinNextMix  = find(gainGamWinNext.trial == 2 & gainGamWinNext.safe ==0 & gainGamWinNext.riskyGain>0 & gainGamWinNext.riskyLoss<0); % mixed trials (1655)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(gainGamWinNextGain)); %0.6044
-mean(firstPlayTable.choice(gainGamWinNextLoss)); %0.6213
-mean(firstPlayTable.choice(gainGamWinNextMix));  %0.6066
-
-% following gain trial win (avg outcome = 103) --> gambling on gain and mixed are similar but slightly
-% higher when current loss trial type.
-
-
-% T-1: GAIN, GAMBLE, LOSS:
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: gainGamLoss1
-% index  for all t: gainGamLoss1+1
-
-gainGamLossNext = firstPlayTable(gainGamLoss1 + 1,:); % all trials following a gain trial, gamble loss
-
-% When previous trial was gain trial type and participants gambled and
-% loss the following trials were...
-gainGamLossNextGain = find(gainGamLossNext.trial == 2 & gainGamLossNext.safe >0 & gainGamLossNext.riskyGain>0 & gainGamLossNext.riskyLoss==0); % gain trials (1992)
-gainGamLossNextLoss = find(gainGamLossNext.trial == 2 & gainGamLossNext.safe <0 & gainGamLossNext.riskyGain==0 & gainGamLossNext.riskyLoss<0); % loss trials (2208)
-gainGamLossNextMix  = find(gainGamLossNext.trial == 2 & gainGamLossNext.safe ==0 & gainGamLossNext.riskyGain>0 & gainGamLossNext.riskyLoss<0); % mixed trials (1612)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(gainGamLossNextGain)); %0.6135
-mean(firstPlayTable.choice(gainGamLossNextLoss)); %0.5969
-mean(firstPlayTable.choice(gainGamLossNextMix));  %0.6210
-
-% following gain trial loss (outcome = 0) --> gambling highest for mixed and lowest
-% for loss trials.
-
-
-% T-1: LOSS, GAMBLE, WIN
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: lossGamWin1
-% index  for all t: lossGamWin1+1
-
-lossGamWinNext = firstPlayTable(lossGamWin1 + 1,:); % all trials following a loss trial, gamble win
-
-% When previous trial was loss trial type and participants gambled and
-% won the following trials were...
-lossGamWinNextGain = find(lossGamWinNext.trial == 2 & lossGamWinNext.safe >0 & lossGamWinNext.riskyGain>0 & lossGamWinNext.riskyLoss==0); % gain trials (2532)
-lossGamWinNextLoss = find(lossGamWinNext.trial == 2 & lossGamWinNext.safe <0 & lossGamWinNext.riskyGain==0 & lossGamWinNext.riskyLoss<0); % loss trials (2343)
-lossGamWinNextMix  = find(lossGamWinNext.trial == 2 & lossGamWinNext.safe ==0 & lossGamWinNext.riskyGain>0 & lossGamWinNext.riskyLoss<0); % mixed trials (1903)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(lossGamWinNextGain)); %0.6181
-mean(firstPlayTable.choice(lossGamWinNextLoss)); %0.6206
-mean(firstPlayTable.choice(lossGamWinNextMix));  %0.6190
-
-% following loss trial win (outcome = 0) --> gambling is roughly the same
-% on gain and mixed trials and slightly higher on loss trials
-
-% T-1 LOSS, GAMBLE, LOSS
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: lossGamLoss1
-% index  for all t: lossGamLoss1+1
-
-lossGamLossNext = firstPlayTable(lossGamLoss1 + 1,:); % all trials following a loss trial, gamble loss
-
-% When previous trial was loss trial type and participants gambled and
-% loss the following trials were...
-lossGamLossNextGain = find(lossGamLossNext.trial == 2 & lossGamLossNext.safe >0 & lossGamLossNext.riskyGain>0 & lossGamLossNext.riskyLoss==0); % gain trials (2522)
-lossGamLossNextLoss = find(lossGamLossNext.trial == 2 & lossGamLossNext.safe <0 & lossGamLossNext.riskyGain==0 & lossGamLossNext.riskyLoss<0); % loss trials (2281)
-lossGamLossNextMix  = find(lossGamLossNext.trial == 2 & lossGamLossNext.safe ==0 & lossGamLossNext.riskyGain>0 & lossGamLossNext.riskyLoss<0); % mixed trials (1726)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(lossGamLossNextGain)); %0.6086
-mean(firstPlayTable.choice(lossGamLossNextLoss)); %0.6199
-mean(firstPlayTable.choice(lossGamLossNextMix));  %0.6101
-
-% following loss trial loss (avg outcome -97) --> gambling is highest for
-% loss trials and lowest for gain trials although the differences are small
-
-% T-1 MIXED, GAMBLE, WIN
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: mixedGamWin1
-% index  for all t: mixedGamWin1+1
-
-mixedGamWinNext = firstPlayTable(mixedGamWin1 + 1,:); % all trials following a mixed trial, gamble loss
-
-% When previous trial was mixed trial type and participants gambled and
-% win the following trials were...
-mixedGamWinNextGain = find(mixedGamWinNext.trial == 2 & mixedGamWinNext.safe >0 & mixedGamWinNext.riskyGain>0 & mixedGamWinNext.riskyLoss==0); % gain trials (1826)
-mixedGamWinNextLoss = find(mixedGamWinNext.trial == 2 & mixedGamWinNext.safe <0 & mixedGamWinNext.riskyGain==0 & mixedGamWinNext.riskyLoss<0); % loss trials (1982)
-mixedGamWinNextMix  = find(mixedGamWinNext.trial == 2 & mixedGamWinNext.safe ==0 & mixedGamWinNext.riskyGain>0 & mixedGamWinNext.riskyLoss<0); % mixed trials (1228)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(mixedGamWinNextGain)); %0.6002
-mean(firstPlayTable.choice(mixedGamWinNextLoss)); %0.5928
-mean(firstPlayTable.choice(mixedGamWinNextMix));  %0.6059
-
-% following a mixed trial win (avg outcome =57) --> risk-taking is very
-% similar across gain, loss and mixed trials (slighly slower on current loss)
-
-
-% T-1 MIXED, GAMBLE, LOSS
-% t = gain gambled
-% t = loss gambled
-% t = mixed gambled
-
-% index for all t-1: mixedGamLoss1
-% index  for all t: mixedGamLoss1+1
-
-mixedGamLossNext = firstPlayTable(mixedGamLoss1 + 1,:); % all trials following a mixed trial, gamble loss
-
-% When previous trial was mixed trial type and participants gambled and
-% loss the following trials were...
-mixedGamLossNextGain = find(mixedGamLossNext.trial == 2 & mixedGamLossNext.safe >0 & mixedGamLossNext.riskyGain>0 & mixedGamLossNext.riskyLoss==0); % gain trials (1871)
-mixedGamLossNextLoss = find(mixedGamLossNext.trial == 2 & mixedGamLossNext.safe <0 & mixedGamLossNext.riskyGain==0 & mixedGamLossNext.riskyLoss<0); % loss trials (1916)
-mixedGamLossNextMix  = find(mixedGamLossNext.trial == 2 & mixedGamLossNext.safe ==0 & mixedGamLossNext.riskyGain>0 & mixedGamLossNext.riskyLoss<0); % mixed trials (1267)
-
-% and average gambling on those trials was:
-mean(firstPlayTable.choice(mixedGamLossNextGain)); %0.5949
-mean(firstPlayTable.choice(mixedGamLossNextLoss)); %0.6044
-mean(firstPlayTable.choice(mixedGamLossNextMix));  %0.5927
-
-% Following a mixed trial loss, risk-taking is slighly higher on a loss
-% trial relative to gain and mixed trial although differences are small
-
-
-% Risk-taking on a gain trial when previous trial was...
-    % gain gamble win   = 0.6044
-    % gain gamble loss  = 0.6135
-    % loss gamble win   = 0.6181
-    % loss gamble loss  = 0.6086
-    % mixed gamble win  = 0.6002
-    % mixed gamble loss = 0.5949
-
-% Risk-taking on a loss trial when previous trial was...
-    % gain gamble win   = 0.6213
-    % gain gamble loss  = 0.5969
-    % loss gamble win   = 0.6206
-    % loss gamble loss  = 0.6199
-    % mixed gamble win  = 0.5928
-    % mixed gamble loss = 0.6044
-
-% Risk-taking on a mixed trial when previous trial was...
-    % gain gamble win   = 0.6066
-    % gain gamble loss  = 0.6210
-    % loss gamble win   = 0.6190
-    % loss gamble loss  = 0.6101
-    % mixed gamble win  = 0.6059
-    % mixed gamble loss = 0.5927
-
-% TO DO: PLOT this stuff!
-
 
 
 %% 
+
+% for each trial, note the trial type with 1 and others =0
+firstPlayTable.mixType(firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0)=1; % current mix trial
+firstPlayTable.lossType(firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0)=1; % current loss trial
+firstPlayTable.gainType(firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0)=1; % current gain trial
+
+
+
 nT = 30; % 30 trials
 pgamPrevTrials = array2table(NaN(30,22));
 pgamPrevTrials.Properties.VariableNames ={'allCurrTypes' 
@@ -469,17 +297,8 @@ for t=2:nT % 2-30 bc there is no prev trial before 1
 %         fprintf('current trial vector != previous trial vector for trial number %i\n',t)
 %     end %double checking that vectors for current and previous trials are same size
 %     
+   
     
-  
-     prevGainWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
-     prevGainLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
-     prevLossWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
-     prevLossLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
-     prevMixWinInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
-     prevMixLoseInd = find(firstPlayTable.trial == t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
-    % note that gambling on the above trials == 1, that is the subsetting
-    % criteria since we are not looking at safe trials right now.
-     
     currGainInd = find(firstPlayTable.trial==t & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0); % index current gain trials
     currLossInd = find(firstPlayTable.trial==t & firstPlayTable.safe <0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0); % index current loss trials
     currMixInd = find(firstPlayTable.trial==t & firstPlayTable.safe ==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0);  % index current mix trials
@@ -488,20 +307,141 @@ for t=2:nT % 2-30 bc there is no prev trial before 1
     pgamPrevTrials.allCurrGain(t) = mean(firstPlayTable.choice(currGainInd));   % pgamble across all current gain trials
     pgamPrevTrials.allCurrLoss(t) = mean(firstPlayTable.choice(currLossInd));   % pgamble across all current loss trials
     pgamPrevTrials.allCurrMix(t) = mean(firstPlayTable.choice(currMixInd));     % pgamble across all current mix trials
-    
-    
- % what does pgamble look like on each trial as a function of both curren
- % trial type and previous trial type/outcome
 
- % LEFT OFF HERE - TRYING TO FIGURE OUT HOW TO GET PGAM ON CURRENT TRIAL AS
- % A FUNCTION OF PREVIOUS TRIAL STUFF.
-    
-    
 
+    % PREVIOUS TRIAL WAS GAIN WIN
+    PrevGainWinInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+    
+    % current trial is mix
+    currMixPrevGainWinInd = find(firstPlayTable.mixType(PrevGainWinInd + 1)==1); % index current mix trials following a gain win  
+    pgamPrevTrials.currMixPrevGainWin(t) = mean(firstPlayTable.choice(currMixPrevGainWinInd));
+    
+    % current trial is loss
+    currLossPrevGainWinInd = find(firstPlayTable.lossType(PrevGainWinInd + 1)==1); % index current loss trials following a gain win  
+    pgamPrevTrials.currLossPrevGainWin(t) = mean(firstPlayTable.choice(currLossPrevGainWinInd));
+    
+    %current trial is gain
+    currGainPrevGainWinInd = find(firstPlayTable.gainType(PrevGainWinInd + 1)==1); % index current gain trials following a gain win  
+    pgamPrevTrials.currGainPrevGainWin(t) = mean(firstPlayTable.choice(currGainPrevGainWinInd));
+    
+    
+    
+    % PREVIOUS TRIAL WAS GAIN LOSS
+    PrevGainLoseInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+    
+    % current trial is mix
+    currMixPrevGainLoseInd = find(firstPlayTable.mixType(PrevGainLoseInd + 1)==1); % index current mix trials following a gain loss  
+    pgamPrevTrials.currMixPrevGainLose(t) = mean(firstPlayTable.choice(currMixPrevGainLoseInd));
+    
+    % current trial is loss
+    currLossPrevGainLoseInd = find(firstPlayTable.lossType(PrevGainLoseInd + 1)==1); % index current loss trials following a gain loss  
+    pgamPrevTrials.currLossPrevGainLose(t) = mean(firstPlayTable.choice(currLossPrevGainLoseInd));
+    
+    %current trial is gain
+    currGainPrevGainLoseInd = find(firstPlayTable.gainType(PrevGainLoseInd + 1)==1); % index current gain trials following a gain loss  
+    pgamPrevTrials.currGainPrevGainLose(t) = mean(firstPlayTable.choice(currGainPrevGainLoseInd));
+    
+    
+    
+    % PREVIOUS TRIAL WAS LOSS WIN
+     PrevLossWinInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+         
+    % current trial is mix
+    currMixPrevLossWinInd = find(firstPlayTable.mixType(PrevLossWinInd + 1)==1); % index current mix trials following a loss win  
+    pgamPrevTrials.currMixPrevLossWin(t) = mean(firstPlayTable.choice(currMixPrevLossWinInd));
+    
+    % current trial is loss
+    currLossPrevLossWinInd = find(firstPlayTable.lossType(PrevLossWinInd + 1)==1); % index current loss trials following a loss win  
+    pgamPrevTrials.currLossPrevLossWin(t) = mean(firstPlayTable.choice(currLossPrevLossWinInd));
+    
+    %current trial is gain
+    currGainPrevLossWinInd = find(firstPlayTable.gainType(PrevLossWinInd + 1)==1); % index current gain trials following a loss win  
+    pgamPrevTrials.currGainPrevLossWin(t) = mean(firstPlayTable.choice(currGainPrevLossWinInd));
+    
+     
+     
+    % PREVIOUS TRIAL WAS LOSS LOSE
+    PrevLossLoseInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+
+    % current trial is mix
+    currMixPrevLossLoseInd = find(firstPlayTable.mixType(PrevLossLoseInd + 1)==1); % index current mix trials following a loss loss  
+    pgamPrevTrials.currMixPrevLossLose(t) = mean(firstPlayTable.choice(currMixPrevLossLoseInd));
+    
+    % current trial is loss
+    currLossPrevLossLoseInd = find(firstPlayTable.lossType(PrevLossLoseInd + 1)==1); % index current loss trials following a loss loss  
+    pgamPrevTrials.currLossPrevLossLose(t) = mean(firstPlayTable.choice(currLossPrevLossLoseInd));
+    
+    %current trial is gain
+    currGainPrevLossLoseInd = find(firstPlayTable.gainType(PrevLossLoseInd + 1)==1); % index current gain trials following a loss loss  
+    pgamPrevTrials.currGainPrevLossLose(t) = mean(firstPlayTable.choice(currGainPrevLossLoseInd));
+    
+    
+    
+    
+    %PREVIOUS TRIAL WAS MIX WIN
+    PrevMixGainInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+
+    % current trial is mix
+    currMixPrevMixWinInd = find(firstPlayTable.mixType(PrevMixGainInd + 1)==1); % index current mix trials following a mix win  
+    pgamPrevTrials.currMixPrevMixWin(t) = mean(firstPlayTable.choice(currMixPrevMixWinInd));
+    
+    % current trial is loss
+    currLossPrevMixWinInd = find(firstPlayTable.lossType(PrevMixGainInd + 1)==1); % index current loss trials following a mix win  
+    pgamPrevTrials.currLossPrevMixWin(t) = mean(firstPlayTable.choice(currLossPrevMixWinInd));
+    
+    %current trial is gain
+    currGainPrevMixWinInd = find(firstPlayTable.gainType(PrevMixGainInd + 1)==1); % index current gain trials following a mix win  
+    pgamPrevTrials.currGainPrevMixWin(t) = mean(firstPlayTable.choice(currGainPrevMixWinInd));
+    
+    
+    
+    
+    %PREVIOUS TRIAL WAS MIX LOSS
+    PrevMixLossInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+
+    
+    % current trial is mix
+    currMixPrevMixLoseInd = find(firstPlayTable.mixType(PrevMixLossInd + 1)==1); % index current mix trials following a mix loss   
+    pgamPrevTrials.currMixPrevMixLose(t) = mean(firstPlayTable.choice(currMixPrevMixLoseInd));
+    
+    % current trial is loss
+    currLossPrevMixLoseInd = find(firstPlayTable.lossType(PrevMixLossInd + 1)==1); % index current loss trials following a mix loss  
+    pgamPrevTrials.currLossPrevMixLose(t) = mean(firstPlayTable.choice(currLossPrevMixLoseInd));
+    
+    %current trial is gain
+    currGainPrevMixLoseInd = find(firstPlayTable.gainType(PrevMixLossInd + 1)==1); % index current gain trials following a mix loss  
+    pgamPrevTrials.currGainPrevMixLose(t) = mean(firstPlayTable.choice(currGainPrevMixLoseInd));
+    
     
 end
 
 
 
-plot(pgamPrevTrials.allCurrTypes); % gambling generally goes down over time.
+
+% plot 18 lines above
+f1=plot(pgamPrevTrials.currGainPrevGainLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+hold on
+plot(pgamPrevTrials.currGainPrevGainWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevLossWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevLossLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevMixWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevMixLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+
+plot(pgamPrevTrials.currLossPrevGainLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevGainWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevLossWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevLossLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevMixWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevMixLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2);
+
+plot(pgamPrevTrials.currMixPrevGainLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevGainWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevLossWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevLossLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevMixWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevMixLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2);
+
+
+
+
 
