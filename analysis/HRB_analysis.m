@@ -250,7 +250,9 @@ plot(pgams{:,8},'color', 'blue', 'marker', "o", 'markersize',9, "linewidth", 2);
 
 
 
-%% 
+%% Look at p(gamble) as a function of current trial type and previous trial type/choice/outcome
+% will focus on gain and loss previous outcomes (and not safe) for right
+% now.
 
 % for each trial, note the trial type with 1 and others =0
 firstPlayTable.mixType(firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0)=1; % current mix trial
@@ -416,30 +418,175 @@ for t=2:nT % 2-30 bc there is no prev trial before 1
 end
 
 
-
-
-% plot 18 lines above
-f1=plot(pgamPrevTrials.currGainPrevGainLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+%% plot the results above
+figure
+% plot 18 lines above for trials 2-10
+% current trial is gain type
+subplot(3,4,1)
+f1=plot(pgamPrevTrials.currGainPrevGainLose(2:10), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
 hold on
-plot(pgamPrevTrials.currGainPrevGainWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currGainPrevLossWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currGainPrevLossLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currGainPrevMixWin, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currGainPrevMixLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); 
+title('P(gamble) on gain trial (t) on trials 2-10');
+plot(pgamPrevTrials.currGainPrevGainWin(2:10), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevLossLose(2:10), 'color',[0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevLossWin(2:10), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevMixLose(2:10), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevMixWin(2:10), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
 
-plot(pgamPrevTrials.currLossPrevGainLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currLossPrevGainWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currLossPrevLossWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currLossPrevLossLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currLossPrevMixWin, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currLossPrevMixLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2);
+% current trial is loss type
+subplot(3,4,5)
+f2=plot(pgamPrevTrials.currLossPrevGainLose(2:10), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+hold on
+title('P(gamble) on loss trial (t) on trials 2-10');
+plot(pgamPrevTrials.currLossPrevGainWin(2:10), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevLossLose(2:10), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevLossWin(2:10), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevMixLose(2:10), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevMixWin(2:10), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
 
-plot(pgamPrevTrials.currMixPrevGainLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currMixPrevGainWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currMixPrevLossWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currMixPrevLossLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currMixPrevMixWin, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
-plot(pgamPrevTrials.currMixPrevMixLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2);
+
+% current trial is mix type
+subplot(3,4,9)
+f3=plot(pgamPrevTrials.currMixPrevGainLose(2:10), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+title('P(gamble) on mix trial (t) on trials 2-10');
+hold on
+plot(pgamPrevTrials.currMixPrevGainWin(2:10), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevLossLose(2:10), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevLossWin(2:10), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevMixLose(2:10), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevMixWin(2:10), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+
+
+% plot 18 lines above for trials 11-20
+% current trial is gain type
+subplot(3,4,2)
+f1=plot(pgamPrevTrials.currGainPrevGainLose(11:20), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+hold on
+title('P(gamble) on gain trial (t) on trials 11-20');
+plot(pgamPrevTrials.currGainPrevGainWin(11:20), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevLossLose(11:20), 'color',[0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevLossWin(11:20), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevMixLose(11:20), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevMixWin(11:20), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+
+% current trial is loss type
+subplot(3,4,6)
+f2=plot(pgamPrevTrials.currLossPrevGainLose(11:20), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+hold on
+title('P(gamble) on loss trial (t) on trials 11-20');
+plot(pgamPrevTrials.currLossPrevGainWin(11:20), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevLossLose(11:20), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevLossWin(11:20), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevMixLose(11:20), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevMixWin(11:20), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+
+% current trial is mix type
+subplot(3,4,10)
+f3=plot(pgamPrevTrials.currMixPrevGainLose(11:20), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+title('P(gamble) on mix trial (t) on trials 11-20');
+hold on
+plot(pgamPrevTrials.currMixPrevGainWin(11:20), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevLossLose(11:20), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevLossWin(11:20), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevMixLose(11:20), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevMixWin(11:20), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+% plot 18 lines above for trials 11-20
+% current trial is gain type
+subplot(3,4,3)
+f1=plot(pgamPrevTrials.currGainPrevGainLose(21:30), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+hold on
+title('P(gamble) on gain trial (t) on trials 21-30');
+plot(pgamPrevTrials.currGainPrevGainWin(21:30), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevLossLose(21:30), 'color',[0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevLossWin(21:30), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currGainPrevMixLose(21:30), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currGainPrevMixWin(21:30), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+
+% current trial is loss type
+subplot(3,4,7)
+f2=plot(pgamPrevTrials.currLossPrevGainLose(21:30), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+hold on
+title('P(gamble) on loss trial (t) on trials 21-30');
+plot(pgamPrevTrials.currLossPrevGainWin(21:30), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevLossLose(21:30), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevLossWin(21:30), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currLossPrevMixLose(21:30), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currLossPrevMixWin(21:30), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+
+% current trial is mix type
+subplot(3,4,11)
+f3=plot(pgamPrevTrials.currMixPrevGainLose(21:30), 'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2); 
+title('P(gamble) on mix trial (t) on trials 21-30');
+hold on
+plot(pgamPrevTrials.currMixPrevGainWin(21:30), 'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevLossLose(21:30), 'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevLossWin(21:30), 'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrials.currMixPrevMixLose(21:30), 'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrials.currMixPrevMixWin(21:30), 'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2); 
+
+x = linspace(0, 1, 100)';
+subplot(3,4,[4 8 12])
+plot(x, nan)
+lgd = legend({'t-1 gain lose', 't-1 gain win', 't-1 loss lose', 't-1 loss win', 't-1 mix lose', 't-1 mix win'}, 'Location', 'west', 'FontSize', 16);
+
+
+axis off
+
+
+%% plotting pgamble on current trials as a function of current trial and previous trial
+% collapse across trials 2-10, 11-20, and 21-30
+figure
+% current trial gain
+subplot(3,2,1)
+plot([mean(pgamPrevTrials.currGainPrevGainLose(2:10)) mean(pgamPrevTrials.currGainPrevGainLose(11:20)) mean(pgamPrevTrials.currGainPrevGainLose(21:30))],'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2)
+hold on
+title('P(gamble) on current gain trials')
+plot([mean(pgamPrevTrials.currGainPrevGainWin(2:10))  mean(pgamPrevTrials.currGainPrevGainWin(11:20))  mean(pgamPrevTrials.currGainPrevGainWin(21:30))],'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currGainPrevLossLose(2:10))  mean(pgamPrevTrials.currGainPrevLossLose(11:20))  mean(pgamPrevTrials.currGainPrevLossLose(21:30))],'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currGainPrevLossWin(2:10))  mean(pgamPrevTrials.currGainPrevLossWin(11:20))  mean(pgamPrevTrials.currGainPrevLossWin(21:30))],'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currGainPrevMixLose(2:10))  mean(pgamPrevTrials.currGainPrevMixLose(11:20))  mean(pgamPrevTrials.currGainPrevMixLose(21:30))],'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currGainPrevMixWin(2:10))  mean(pgamPrevTrials.currGainPrevMixWin(11:20))  mean(pgamPrevTrials.currGainPrevMixWin(21:30))],'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2)
+
+% current trial loss
+subplot(3,2,3)
+plot([mean(pgamPrevTrials.currLossPrevGainLose(2:10)) mean(pgamPrevTrials.currGainPrevGainLose(11:20)) mean(pgamPrevTrials.currGainPrevGainLose(21:30))],'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2)
+hold on
+title('P(gamble) on current loss trials')
+plot([mean(pgamPrevTrials.currLossPrevGainWin(2:10))  mean(pgamPrevTrials.currLossPrevGainWin(11:20))  mean(pgamPrevTrials.currLossPrevGainWin(21:30))],'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currLossPrevLossLose(2:10))  mean(pgamPrevTrials.currLossPrevLossLose(11:20))  mean(pgamPrevTrials.currLossPrevLossLose(21:30))],'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currLossPrevLossWin(2:10))  mean(pgamPrevTrials.currLossPrevLossWin(11:20))  mean(pgamPrevTrials.currLossPrevLossWin(21:30))],'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currLossPrevMixLose(2:10))  mean(pgamPrevTrials.currLossPrevMixLose(11:20))  mean(pgamPrevTrials.currLossPrevMixLose(21:30))],'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currLossPrevMixWin(2:10))  mean(pgamPrevTrials.currLossPrevMixWin(11:20))  mean(pgamPrevTrials.currLossPrevMixWin(21:30))],'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2)
+
+
+% current mix loss
+subplot(3,2,5)
+plot([mean(pgamPrevTrials.currMixPrevGainLose(2:10)) mean(pgamPrevTrials.currMixPrevGainLose(11:20)) mean(pgamPrevTrials.currMixPrevGainLose(21:30))],'color', [0, 0.4470, 0.7410], 'marker', "o", 'markersize',9, "linewidth", 2)
+hold on
+title('P(gamble) on current mix trials')
+plot([mean(pgamPrevTrials.currMixPrevGainWin(2:10))  mean(pgamPrevTrials.currMixPrevGainWin(11:20))  mean(pgamPrevTrials.currMixPrevGainWin(21:30))],'color', [0.8500, 0.3250, 0.0980], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currMixPrevLossLose(2:10))  mean(pgamPrevTrials.currMixPrevLossLose(11:20))  mean(pgamPrevTrials.currMixPrevLossLose(21:30))],'color', [0.4940, 0.1840, 0.5560], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currMixPrevLossWin(2:10))  mean(pgamPrevTrials.currMixPrevLossWin(11:20))  mean(pgamPrevTrials.currMixPrevLossWin(21:30))],'color', [0.9290, 0.6940, 0.1250], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currMixPrevMixLose(2:10))  mean(pgamPrevTrials.currMixPrevMixLose(11:20))  mean(pgamPrevTrials.currMixPrevMixLose(21:30))],'color', [0.3010, 0.7450, 0.9330], 'marker', "o", 'markersize',9, "linewidth", 2)
+plot([mean(pgamPrevTrials.currMixPrevMixWin(2:10))  mean(pgamPrevTrials.currMixPrevMixWin(11:20))  mean(pgamPrevTrials.currMixPrevMixWin(21:30))],'color', [0.4660, 0.6740, 0.1880], 'marker', "o", 'markersize',9, "linewidth", 2)
+
+
+
+
+x = linspace(0, 1, 100)';
+subplot(3,2,[2 4 6])
+plot(x, nan)
+lgd = legend({'t-1 gain lose', 't-1 gain win', 't-1 loss lose', 't-1 loss win', 't-1 mix lose', 't-1 mix win'}, 'Location', 'west', 'FontSize', 16, 'linewidth', 2);
+axis off
+
+
+
+
 
 
 
