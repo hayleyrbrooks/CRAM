@@ -113,265 +113,151 @@ mean(subInfo.mixedGam(subInfo.subIds(adjustIds))); %65.9624
 % starting with 1st and 2nd trial for simplicity
 % There will be 9 variations on the first trial (gain, loss, and mixed trials with 3 choices/outcomes).
 
-pgams = NaN(3,9); % rows are trials 2-4 and columns are the various trial type outcome combinations
-pgams = array2table(pgams);
-pgams.Properties.VariableNames= {'gainGamWin' 'gainGamLoss' 'gainSafe' 'lossGamWin' 'lossGamLoss' 'lossSafe' 'mixedGamWin' 'mixedGamLoss' 'mixedSafe'};
 
-% gain trial, gambled and won (these are trials 1-3)
-gainGamWin1= find(firstPlayTable.trial == 1 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5977 trials, 103 mean outcome
-gainGamWin2= find(firstPlayTable.trial == 2 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5746 trials, 104 mean outcome
-gainGamWin3= find(firstPlayTable.trial == 3 & firstPlayTable.safe >0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5923 trials, 104 mean outcome
-
-% pgamble on next trial (these are trials 2-4):
-pgams.gainGamWin(1) = mean(firstPlayTable.choice(gainGamWin1+1)); %  0.6737 (pgamble on trial 2)
-pgams.gainGamWin(2) = mean(firstPlayTable.choice(gainGamWin2+1)); %  0.6639 (pgamble on trial 3)
-pgams.gainGamWin(3) = mean(firstPlayTable.choice(gainGamWin3+1)); %  0.6740 (pgamble on trial 4)
+nT = 30; % 30 trials
+pgamPrevTrialsOnly = array2table(NaN(30,9));
+pgamPrevTrialsOnly.Properties.VariableNames={'gainGamWin' 'gainGamLose' 'gainSafe' 'lossGamWin' 'lossGamLose' 'lossSafe' 'mixGamWin' 'mixGamLose' 'mixSafe'};
 
 
-% gain trial, gambled and loss (these are trials 1-3; mean outcome = 0)
-gainGamLoss1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5812 trials
-gainGamLoss2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5636 trials
-gainGamLoss3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5849 trials
-
-% pgamble on next trial (these are trials 2-4):
-pgams.gainGamLoss(1) = mean(firstPlayTable.choice(gainGamLoss1+1)); % 0.7266 (pgamble on trial 2)
-pgams.gainGamLoss(2) = mean(firstPlayTable.choice(gainGamLoss2+1)); % 0.7016 (pgamble on trial 3)
-pgams.gainGamLoss(3) = mean(firstPlayTable.choice(gainGamLoss3+1)); % 0.7073 (pgamble on trial 4)
+for t=2:nT % 2-30 bc there is no prev trial before 1
 
 
-% gain trials, safe (these are trials 1-3)
-gainSafe1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.safe); %5562 trials, 44 mean outcome
-gainSafe2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.safe); %5657 trials, 45 mean outcome
-gainSafe3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.safe); %5455 trials, 44 mean outcome
+    % PREVIOUS TRIAL WAS GAIN WIN
+    PrevGainWinInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+    pgamPrevTrialsOnly.gainGamWin(t)= mean(firstPlayTable.choice(PrevGainWinInd+1));
+    
+    % PREVIOUS TRIAL WAS GAIN LOSS
+    PrevGainLoseInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+    pgamPrevTrialsOnly.gainGamLose(t)= mean(firstPlayTable.choice(PrevGainLoseInd+1));
+    
+    % PREVIOUS TRIAL WAS GAIN SAFE
+     PrevGainSafeInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.safe); 
+    pgamPrevTrialsOnly.gainSafe(t)= mean(firstPlayTable.choice(PrevGainSafeInd+1));
+    
+    % PREVIOUS TRIAL WAS LOSS WIN
+     PrevLossWinInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+     pgamPrevTrialsOnly.lossGamWin(t)= mean(firstPlayTable.choice(PrevLossWinInd+1));
 
-% pgamble on next trial (these are trials 2-4)
-pgams.gainSafe(1) = mean(firstPlayTable.choice(gainSafe1+1)); % 0.6235
-pgams.gainSafe(2) = mean(firstPlayTable.choice(gainSafe2+1)); % 0.6164
-pgams.gainSafe(3) = mean(firstPlayTable.choice(gainSafe3+1)); % 0.6266
+    % PREVIOUS TRIAL WAS LOSS LOSE
+    PrevLossLoseInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+    pgamPrevTrialsOnly.lossGamLose(t)= mean(firstPlayTable.choice(PrevLossLoseInd+1));
+    
+    % PREVIOUS TRIAL WAS LOSS SAFE
+    PrevLossSafeInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); 
+    pgamPrevTrialsOnly.lossSafe(t)= mean(firstPlayTable.choice(PrevLossSafeInd+1));
+    
+    %PREVIOUS TRIAL WAS MIX WIN
+    PrevMixGainInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); 
+    pgamPrevTrialsOnly.mixGamWin(t)= mean(firstPlayTable.choice(PrevMixGainInd+1));
+    
+    %PREVIOUS TRIAL WAS MIX LOSS
+    PrevMixLossInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
+    pgamPrevTrialsOnly.mixGamLose(t)= mean(firstPlayTable.choice(PrevMixLossInd+1));
+    
+    % PREVIOUS TRIAL WAS MIX SAFE
+    PrevMixSafeInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); 
+    pgamPrevTrialsOnly.mixSafe(t)= mean(firstPlayTable.choice(PrevMixSafeInd+1));
+    
+end
 
-
-% loss trials, gamble won (these are trials 1-3, mean outcome = 0)
-lossGamWin1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %6778 trials
-lossGamWin2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5638 trials
-lossGamWin3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5147 trials
-
-% pgamble on next trials (these are trials 2-4)
-pgams.lossGamWin(1) = mean(firstPlayTable.choice(lossGamWin1+1)); %0.7307
-pgams.lossGamWin(2) = mean(firstPlayTable.choice(lossGamWin2+1)); %0.7185
-pgams.lossGamWin(3) = mean(firstPlayTable.choice(lossGamWin3+1)); %0.7496
-
-
-% loss trials, gamble loss (these are trials 1-3)
-lossGamLoss1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %6529 trials, -99 mean outcome
-lossGamLoss2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5707 trials, -97 mean outcome
-lossGamLoss3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5198 trials, -96 mean outcome
-
-% pgamble on next trial (these are trials 2-4)
-pgams.lossGamLoss(1) = mean(firstPlayTable.choice(lossGamLoss1+1)); % 0.7059
-pgams.lossGamLoss(2) = mean(firstPlayTable.choice(lossGamLoss2+1)); % 0.7069
-pgams.lossGamLoss(3) = mean(firstPlayTable.choice(lossGamLoss3+1)); % 0.7384
-
-
-% loss trials, safe (these are trials 1-3)
-lossSafe1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %3772 trials, -43 mean outcome
-lossSafe2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %6040 trials, -43 mean outcome
-lossSafe3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %6937 trials, -43 mean outcome
-
-% pgamble on next trial (these are trials 2-4):
-pgams.lossSafe(1) = mean(firstPlayTable.choice(lossSafe1+1)); %0.6307
-pgams.lossSafe(2) = mean(firstPlayTable.choice(lossSafe2+1)); %0.6555
-pgams.lossSafe(3) = mean(firstPlayTable.choice(lossSafe3+1)); %0.6494
-
-
-% mixed trials, gamble win (these are trials 1-3)
-mixedGamWin1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %5036 trials, 57 mean outcome
-mixedGamWin2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %4801 trials, 58 mean outcome
-mixedGamWin3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain); %4750 trials, 57 mean outcome
-
-% pgamble on next trial (these are trials 2-4)
-pgams.mixedGamWin(1) = mean(firstPlayTable.choice(mixedGamWin1+1)); %0.6962
-pgams.mixedGamWin(2) = mean(firstPlayTable.choice(mixedGamWin2+1)); %0.6657
-pgams.mixedGamWin(3) = mean(firstPlayTable.choice(mixedGamWin3+1)); %0.6838
-
-
-% mixed trials, gamble loss (these are trials 1-3)
-mixedGamLoss1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %5054 trials, -49 mean outcome
-mixedGamLoss2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %4831 trials, -47 mean outcome
-mixedGamLoss3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); %4661 trials, -47 mean outcome
-
-% pgamble on next trial (these are trials 2-4)
-pgams.mixedGamLoss(1) = mean(firstPlayTable.choice(mixedGamLoss1+1)); %0.7068
-pgams.mixedGamLoss(2) = mean(firstPlayTable.choice(mixedGamLoss2+1)); %0.6643
-pgams.mixedGamLoss(3) = mean(firstPlayTable.choice(mixedGamLoss3+1)); %0.6953
-
-
-% mixed trials, safe (these are trials 1-3, mean outcome =0)
-mixedSafe1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %2547 trials
-mixedSafe2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %3011 trials
-mixedSafe3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe==0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.safe); %3147 trials
-
-% pgamble on next trial (these are trials 2-4)
-pgams.mixedSafe(1) = mean(firstPlayTable.choice(mixedSafe1+1)); %0.6368
-pgams.mixedSafe(2) = mean(firstPlayTable.choice(mixedSafe2+1)); %0.6054
-pgams.mixedSafe(3) = mean(firstPlayTable.choice(mixedSafe3+1)); %0.6107
-
-
-% plot 6 lines across trials 2-4 (green = gain trial; red = loss trial;
-% blue =  mixed trial; + = win outcome and o = loss outcome)'
-% not plotting previous safe trials
-figure
-
-f1 = plot(pgams{:,1}, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); % gain gamble win
+f1=plot(pgamPrevTrialsOnly.gainGamWin, 'color', 'green', 'marker', "o", 'markersize',9, "linewidth", 2); 
 hold on
-plot(pgams{:,2}, 'color', 'green', 'marker', "o", 'markersize',9, "linewidth", 2); % gain gamble loss
-%plot(pgams{:,3},  'color', 'green', 'marker', "*", 'markersize',9, "linewidth", 2); % gain safe
-plot(pgams{:,4}, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); % loss gamble win
-plot(pgams{:,5}, 'color', 'red', 'marker', "o", 'markersize',9, "linewidth", 2); % loss gamble loss
-%plot(pgams{:,6}, 'color', 'red', 'marker', "*", 'markersize',9, "linewidth", 2); % loss safe
-plot(pgams{:,7},'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); % mixed gamble win
-plot(pgams{:,8},'color', 'blue', 'marker', "o", 'markersize',9, "linewidth", 2); % mixed gamble loss
-%plot(pgams{:,9},'color', 'blue', 'marker', "*", 'markersize',9, "linewidth", 2); % mixed safe
-title('P(gamble) on trials 2-4');
-xticklabels({'2','','','','','3','','','','','4'})
-xlabel('trial number')
-ylabel('p(gamble)')
-legend({'t-1 gain win' 't-1 gain lose' 't-1 loss win' 't-1 loss lose' 't-1 mix win' 't-1 mix lose' }, 'Location', 'northwest');
+title('P(gamble) on trial (t) as function of previous trial type and outcome');
+plot(pgamPrevTrialsOnly.gainGamLose, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrialsOnly.gainSafe, 'color','green', 'marker', "*", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrialsOnly.lossGamWin, 'color', 'red', 'marker', "o", 'markersize',9, "linewidth", 2);
+plot(pgamPrevTrialsOnly.lossGamLose, 'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrialsOnly.lossSafe, 'color', 'red', 'marker', "*", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrialsOnly.mixGamWin, 'color', 'blue', 'marker', "o", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrialsOnly.mixGamLose, 'color', 'blue', 'marker', "+", 'markersize',9, "linewidth", 2); 
+plot(pgamPrevTrialsOnly.mixSafe, 'color', 'blue', 'marker', "*", 'markersize',9, "linewidth", 2); 
+legend({'t-1 gain win', 't-1 gain lose', 't-1 gain safe', 't-1 loss win', 't-1 loss lose', 't-1 loss safe', 't-1 mix win', 't-1 mix lose', 't-1 mix safe'}, 'Location', 'southwest', 'FontSize', 16);
+xlabel("trial number")
+ylabe("p(gamble)")
+
 
 
 % Interim summary
-% Across trials 2-4 there is a decent amount of variability in pgamble
-% as a function of previous trial type and outcome (not taking into consideration current
-% trial). However, there are three patterns that may be worth following up
-% on. First, it looks like people generally take more risks following a
-% loss trial and risk-taking is higher following a loos win relative to a
-% loss lose. Second, there is a consistently large difference between
-% risk-taking following a gain trial where risk-taking is low following a
-% gain win relative to a gain loss. hird, it looks like there could be a
-% difference in how people behave following a gain lose (0) and a loss win
-% (0). There does not appear to be much of a consistent difference in gambling following a mixed trial.
+% Looking at risk-taking as a function of previous trial
+% type/choice/outcome (not considering current trialstuff ):
+% 1) Overall, there is less risk-taking following safe outcomes across all
+% trial types and risk-taking following a safe outcome decreases over the task. 
+% Perhaps this is because people who choose safe at first are more likley to continue to choose safe across
+% the task? Across safe outcomes, there is a larger difference in risk-taking
+% following a loss safe outcome (negative value) relative to gain safe and
+% mix safe (outcome >=0).
+% Ignoring safe outcomes: Risk-taking is consistently higher following loss
+% trials and is lowest following a gain win.
+% Toward the end of the task, a more apprent pattern emerges with
+% risk-taking being highest following losses, middle following mixed trials
+% and lowest following gain trials.
 
 
 
-%% look at pgamble as a functio of previous trial type and outcome splitting up outcomes by amount and focusing on loss and gain types
+%% look at pgamble as a function of previous trial type and outcome splitting up outcomes by amount and focusing on loss and gain types
 
-
-pgamsByAmt = NaN(4,6); % rows are trials 2-5 and columns are the various trial type outcome combinations
-pgamsByAmt = array2table(pgamsByAmt);
+nT = 30; % 30 trials
+pgamsByAmt = array2table(NaN(30,6));
 pgamsByAmt.Properties.VariableNames= {'gainLarge' 'gainMed' 'gainZero' 'lossLarge' 'lossMed' 'lossZero'};
 
+for t=2:nT % 2-30 bc there is no prev trial before 1
+    
+    % PREVIOUS TRIAL WAS A LARGE GAIN
+    PrevGainLargeInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome>=100);
+    pgamsByAmt.gainLarge(t)= mean(firstPlayTable.choice(PrevGainLargeInd+1));
+    
+    % PREVIOUS TRIAL WAS A MEDIUM GAIN
+    PrevGainMedInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain & firstPlayTable.outcome<100 & firstPlayTable.outcome>0);
+    pgamsByAmt.gainMed(t)= mean(firstPlayTable.choice(PrevGainMedInd+1));
+    
+    % PREVIOUS TRIAL WAS A GAIN ZERO (loss)
+    PrevGainZeroInd = find(firstPlayTable.trial== t-1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
+    pgamsByAmt.gainZero(t) = mean(firstPlayTable.choice(PrevGainZeroInd+1)); 
+    
+    % PREVIOUS TRIAL WAS LARGE LOSS
+    PrevLossLargeInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome<=-100);
+    pgamsByAmt.lossLarge(t)= mean(firstPlayTable.choice(PrevLossLargeInd+1));
+    
+    % PREVIOUS TRIAL WAS MEDIUM LOSS
+    PrevLossMedInd= find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss & firstPlayTable.outcome>-100 & firstPlayTable.outcome<0);
+    pgamsByAmt.lossMed(t)= mean(firstPlayTable.choice(PrevLossMedInd+1));
+    
+    % PREVIOUS TRIAL WAS LOSS ZERO (win)
+    PrevLossZeroInd = find(firstPlayTable.trial== t-1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyGain);
+    pgamsByAmt.lossZero(t) = mean(firstPlayTable.choice(PrevLossZeroInd+1));
+    
+end
 
 
 
-% pull out previous trial stuff
-% groups of gain outcomes (0,1-99, 100+)
-% trial 1
-gainLargeOC1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome>=100); %3025 trials, 128 mean outcome; range = 100-220
-gainMedOC1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain & firstPlayTable.outcome<100 & firstPlayTable.outcome>0);%  2952 trials, 76 mean outcome;
-gainZeroOC1 = gainGamLoss1;
-
-% pgamble on next trial following gain outcome (trial 2)
-pgamsByAmt.gainLarge(1) = mean(firstPlayTable.choice(gainLargeOC1+1)); %  
-pgamsByAmt.gainMed(1) = mean(firstPlayTable.choice(gainMedOC1+1)); %
-pgamsByAmt.gainZero(1) = mean(firstPlayTable.choice(gainZeroOC1+1)); % 
 
 
-% trial 2
-gainLargeOC2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome>=100); %2912   trials, 129 mean outcome; range = 100-220
-gainMedOC2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain & firstPlayTable.outcome<100 & firstPlayTable.outcome>0);%  2834  trials, 78 mean outcome;
-gainZeroOC2 = gainGamLoss2;
-
-% pgamble on next trial following gain outcome (trial 3)
-pgamsByAmt.gainLarge(2) = mean(firstPlayTable.choice(gainLargeOC2+1)); %  
-pgamsByAmt.gainMed(2) = mean(firstPlayTable.choice(gainMedOC2+1)); %
-pgamsByAmt.gainZero(2) = mean(firstPlayTable.choice(gainZeroOC2+1)); % 
-
-
-% trial 3
-gainLargeOC3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome>=100); %3054 trials, 129 mean outcome; range = 100-220
-gainMedOC3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain & firstPlayTable.outcome<100 & firstPlayTable.outcome>0);%   2869  trials, 78 mean outcome;
-gainZeroOC3 = gainGamLoss3;
-
-% pgamble on next trial following gain outcome (trial 4)
-pgamsByAmt.gainLarge(3) = mean(firstPlayTable.choice(gainLargeOC3+1)); %  
-pgamsByAmt.gainMed(3) = mean(firstPlayTable.choice(gainMedOC3+1)); %
-pgamsByAmt.gainZero(3) = mean(firstPlayTable.choice(gainZeroOC3+1)); % 
-
-
-% trial 4
-gainLargeOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome>=100); 
-gainMedOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyGain & firstPlayTable.outcome<100 & firstPlayTable.outcome>0);
-gainZeroOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe>0 & firstPlayTable.riskyGain>0 & firstPlayTable.riskyLoss==0 & firstPlayTable.outcome==firstPlayTable.riskyLoss); 
-
-% pgamble on next trial following gain outcome (trial 5)
-pgamsByAmt.gainLarge(4) = mean(firstPlayTable.choice(gainLargeOC4+1)); %  
-pgamsByAmt.gainMed(4) = mean(firstPlayTable.choice(gainMedOC4+1)); %
-pgamsByAmt.gainZero(4) = mean(firstPlayTable.choice(gainZeroOC4+1)); % 
-
-% groups of loss outcomes (-0, -1-99, -100+)
-% trial 1
-lossLargeOC1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome<=-100);% 2933 trials, mean = -128; range = -100 - -220
-lossMedOC1 = find(firstPlayTable.trial == 1 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss & firstPlayTable.outcome>-100 & firstPlayTable.outcome<0); %3596  trials, -76 mean outcome
-lossZeroOC1 = lossGamLoss1;
-
-% pgamble on next trial following loss outcome (trial 2)
-pgamsByAmt.lossLarge(1) = mean(firstPlayTable.choice(lossLargeOC1+1)); %  
-pgamsByAmt.lossMed(1) = mean(firstPlayTable.choice(lossMedOC1+1)); %
-pgamsByAmt.lossZero(1) = mean(firstPlayTable.choice(lossZeroOC1+1)); % 
-
-% trial 2
-lossLargeOC2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome<=-100);%2378 trials, mean = -127; range = -100 - -220
-lossMedOC2 = find(firstPlayTable.trial == 2 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss & firstPlayTable.outcome>-100 & firstPlayTable.outcome<0); %3329 trials, -76 mean outcome
-lossZeroOC2 = lossGamLoss2;
-
-% pgamble on next trial following loss outcome (trial 3)
-pgamsByAmt.lossLarge(2) = mean(firstPlayTable.choice(lossLargeOC2+1)); %  
-pgamsByAmt.lossMed(2) = mean(firstPlayTable.choice(lossMedOC2+1)); %
-pgamsByAmt.lossZero(2) = mean(firstPlayTable.choice(lossZeroOC2+1)); % 
-
-% trial 3
-lossLargeOC3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome<=-100); % 2078 trials, mean = -127; range = -100 - -220
-lossMedOC3 = find(firstPlayTable.trial == 3 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss & firstPlayTable.outcome>-100 & firstPlayTable.outcome<0); % 3120 trials, -76 mean outcome
-lossZeroOC3 = lossGamLoss3;
-
-% pgamble on next trial following loss outcome (trial 4)
-pgamsByAmt.lossLarge(3) = mean(firstPlayTable.choice(lossLargeOC3+1)); %  
-pgamsByAmt.lossMed(3) = mean(firstPlayTable.choice(lossMedOC3+1)); %
-pgamsByAmt.lossZero(3) = mean(firstPlayTable.choice(lossZeroOC3+1)); % 
-
-
-% trial 4
-lossLargeOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome<=-100);
-lossMedOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss & firstPlayTable.outcome>-100 & firstPlayTable.outcome<0); 
-lossZeroOC4 = find(firstPlayTable.trial == 4 & firstPlayTable.safe<0 & firstPlayTable.riskyGain==0 & firstPlayTable.riskyLoss<0 & firstPlayTable.outcome==firstPlayTable.riskyLoss);
-
-
-% pgamble on next trial following loss outcome (trial 5)
-pgamsByAmt.lossLarge(4) = mean(firstPlayTable.choice(lossLargeOC4+1)); %  
-pgamsByAmt.lossMed(4) = mean(firstPlayTable.choice(lossMedOC4+1)); %
-pgamsByAmt.lossZero(4) = mean(firstPlayTable.choice(lossZeroOC4+1)); %
+%
 
 figure
 
-plot(pgamsByAmt{:,1}, 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); % large gain amount
+plot(pgamsByAmt.gainLarge(:), 'color', 'green', 'marker', "+", 'markersize',9, "linewidth", 2); % large gain amount
 hold on
-plot(pgamsByAmt{:,2}, 'color', 'green', 'marker', "o", 'markersize',9, "linewidth", 2); % small-med gain amount
-plot(pgamsByAmt{:,3}, 'color', 'green', 'marker', "*", 'markersize',9, "linewidth", 2); % gain amount = 0 (loss)
-plot(pgamsByAmt{:,4}, 'color', 'red', 'marker', "o", 'markersize',9, "linewidth", 2); % large loss amount
-plot(pgamsByAmt{:,5},'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); % small-med loss amount
-plot(pgamsByAmt{:,6},'color', 'red', 'marker', "*", 'markersize',9, "linewidth", 2); % loss amount = 0 (win)
-title('P(gamble) on trials 2-5');
-xticklabels({'2','','3','','4','','5'})
+plot(pgamsByAmt.gainMed(:), 'color', 'green', 'marker', "o", 'markersize',9, "linewidth", 2); % small-med gain amount
+plot(pgamsByAmt.gainZero(:), 'color', 'green', 'marker', "*", 'markersize',9, "linewidth", 2); % gain amount = 0 (loss)
+plot(pgamsByAmt.lossLarge(:), 'color', 'red', 'marker', "o", 'markersize',9, "linewidth", 2); % large loss amount
+plot(pgamsByAmt.lossMed(:),'color', 'red', 'marker', "+", 'markersize',9, "linewidth", 2); % small-med loss amount
+plot(pgamsByAmt.lossZero(:),'color', 'red', 'marker', "*", 'markersize',9, "linewidth", 2); % loss amount = 0 (win)
+title('P(gamble) on trials as a function of previous outcome amount');
 xlabel('trial number')
 ylabel('p(gamble)')
 legend({'t-1 gain>=100' 't-1 gain 0>100' 't-1 gain=0' 't-1 loss <=-100' 't-1 loss -100>0' 't-1 loss=0' }, 'Location', 'northwest');
 
 
 %interim summary
-% Across trials 2-5, it looks like there could be some pattern emerging where risk-taking is generally higher following losses
-% and lower following gains. 
-% Risk-taking is consistently the lowest following a
-% large win
-% this matches patterns from SH lab data.
+% Across the task, there is more risk-taking following loss outcomes and
+% less rik-taking following gain outcomes. 
+% ACross all outcomes/trial types, risk-taking is lowest following large
+% gain outcomes.
+% ACross previous loss trials, risk-taking is highest following
+% really high losses or losses of zeroes (not sure what to make of this)
+% it looks like people are treating previous loss wins (outcome = 0)
+% different than previous gain losses (outcome 0) - cool! 
 
 %% Look at p(gamble) as a function of current trial type and previous trial type/choice/outcome
 % will focus on gain and loss previous outcomes (and not safe) for right
@@ -649,5 +535,12 @@ axis off
 
 
 
+%{ 
+When looking at risk-taking as a function of just previous trial stuff, 
+there is generally more risk-taking following gains and less risk-taking 
+following losses. However, when taking into consideration both previous and 
+current trials, there is actually more risk-taking following gain trials and 
+less risk-taking following loss trials on both current gain and loss trials?
+%}
 
 
