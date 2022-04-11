@@ -173,7 +173,7 @@ plot(pgamPrevTrialsOnly.mixGamLose, 'color', 'blue', 'marker', "+", 'markersize'
 plot(pgamPrevTrialsOnly.mixSafe, 'color', 'blue', 'marker', "*", 'markersize',9, "linewidth", 2); 
 legend({'t-1 gain win', 't-1 gain lose', 't-1 gain safe', 't-1 loss win', 't-1 loss lose', 't-1 loss safe', 't-1 mix win', 't-1 mix lose', 't-1 mix safe'}, 'Location', 'southwest', 'FontSize', 16);
 xlabel("trial number")
-ylabe("p(gamble)")
+ylabel("p(gamble)")
 
 
 
