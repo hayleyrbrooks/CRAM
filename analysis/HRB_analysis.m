@@ -62,7 +62,7 @@ age = vertcat(subjData.age);
 lifeSat = vertcat(subjData.lifeSatisfaction);
 isFemale  = vertcat(subjData.isFemale);
 
-subInfo = table(subIds,totalGam,gainGam,mixedGam,lossGam,lifeSat, isFemale);
+subInfo = table(subIds,totalGam,gainGam,mixedGam,lossGam,lifeSat,age, isFemale);
 
 
 %% Explore some stuff
